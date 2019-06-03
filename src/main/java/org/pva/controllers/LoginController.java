@@ -64,6 +64,8 @@ public class LoginController {
         passwordsList.setTitle("Passwords");
         passwordsList.setScene(new Scene(root, 460, 280));
         passwordsList.show();
+
+
     }
 
 
