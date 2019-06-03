@@ -10,9 +10,15 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
+//        Application.setUserAgentStylesheet(getClass().getResource("/css/style.css").toExternalForm());
+
         Parent root = FXMLLoader.load(getClass().getResource("/login.fxml"));
         primaryStage.setTitle("Password decrypter");
-        primaryStage.setScene(new Scene(root, 430, 55));
+
+        Scene scene = new Scene(root, 430, 55);
+        scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
+
+        primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.show();
     }
