@@ -12,6 +12,8 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 public class LoginController {
 
@@ -31,7 +33,7 @@ public class LoginController {
     }
 
     @FXML
-    public void decryptBtnOnClick() {
+    public void decryptBtnOnClick() throws IOException {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Data entry error");
         if (filePathField == null || filePathField.getText() == null || filePathField.getText().equals("")) {
@@ -48,10 +50,11 @@ public class LoginController {
             return;
         }
 
-        char[] pass = null;
-        if (passwordField != null) {
-            pass = passwordField.getText().toCharArray();
-        }
+        File file = new File(filePathField.getText());
+        byte[] fileBytes = Files.readAllBytes(file.toPath());
+        String fileContent = new String(fileBytes, StandardCharsets.UTF_8);
+        System.out.println(fileContent);
+
     }
 
     @FXML
