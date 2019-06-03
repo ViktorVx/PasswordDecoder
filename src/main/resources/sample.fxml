@@ -9,7 +9,7 @@
    <children>
       <Button fx:id="decryptBtn" mnemonicParsing="false" prefWidth="95.0" text="Decrypt" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="210.0" AnchorPane.topAnchor="35.0" />
       <Button fx:id="createNewBtn" mnemonicParsing="false" prefWidth="95.0" text="Create new" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="310.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="35.0" />
-      <Button fx:id="selectFileBtn" mnemonicParsing="false" prefWidth="95.0" text="Select file" AnchorPane.leftAnchor="310.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
+      <Button fx:id="selectFileBtn" mnemonicParsing="false" onMouseClicked="#selectFileOnClick" prefWidth="95.0" text="Select file" AnchorPane.leftAnchor="310.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
       <TextField fx:id="filePathField" prefWidth="300.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
       <PasswordField fx:id="passwordField" prefWidth="200.0" promptText="Password" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="35.0" />
    </children>
