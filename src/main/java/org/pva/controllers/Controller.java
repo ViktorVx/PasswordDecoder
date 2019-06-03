@@ -1,4 +1,4 @@
-package org.pva;
+package org.pva.controllers;
 
 public class Controller {
 
