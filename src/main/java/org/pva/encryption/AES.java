@@ -11,7 +11,7 @@ public class AES {
 
     private static SecretKeySpec secretKey;
 
-    private static String encrypt(String strToEncrypt, char[] secret) {
+    public static String encrypt(String strToEncrypt, char[] secret) {
         try{
             setSecretKey(secret);
             Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
@@ -23,7 +23,7 @@ public class AES {
         return null;
     }
 
-    private static String decrypt(String strToDecrypt, char[] secret) {
+    public static String decrypt(String strToDecrypt, char[] secret) {
         try{
             setSecretKey(secret);
             Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
@@ -36,10 +36,9 @@ public class AES {
     }
 
     private static void setSecretKey(char[] pass) {
-        MessageDigest sha = null;
         try {
             byte[] key = toByteArray(pass);
-            sha = MessageDigest.getInstance("SHA-1");
+            MessageDigest sha = MessageDigest.getInstance("SHA-1");
             key = sha.digest(key);
             key = Arrays.copyOf(key, 16);
             secretKey = new SecretKeySpec(key, "AES");

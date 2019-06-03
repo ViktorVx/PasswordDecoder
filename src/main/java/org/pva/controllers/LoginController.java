@@ -9,6 +9,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.pva.encryption.AES;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,7 +53,13 @@ public class LoginController {
 
         File file = new File(filePathField.getText());
         byte[] fileBytes = Files.readAllBytes(file.toPath());
-        String fileContent = new String(fileBytes, StandardCharsets.UTF_8);
+
+        char[] pass = passwordField.getText().toCharArray();
+
+//        String fileContent = AES.encrypt(new String(fileBytes, StandardCharsets.UTF_8), pass);
+        String fileContent = AES.decrypt(new String(fileBytes, StandardCharsets.UTF_8), pass);
+
+
         System.out.println(fileContent);
 
     }
