@@ -1,3 +1,7 @@
 .decryptBtn{
     -fx-background-color: wheat;
 }
+
+.decryptBtn:hover {
+    -fx-background-color: crimson;
+}

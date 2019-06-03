@@ -59,7 +59,7 @@ public class LoginController {
         Stage passwordsList = new Stage();
         Parent root = FXMLLoader.load(getClass().getResource("/passwordsList.fxml"));
         passwordsList.setTitle("Passwords");
-        passwordsList.setScene(new Scene(root, 400, 400));
+        passwordsList.setScene(new Scene(root, 460, 280));
         passwordsList.show();
     }
 

@@ -8,6 +8,9 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
+    //todo add locales
+    //todo add stupid music and music-button
+
     @Override
     public void start(Stage primaryStage) throws Exception{
 //        Application.setUserAgentStylesheet(getClass().getResource("/css/style.css").toExternalForm());
