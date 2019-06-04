@@ -10,6 +10,7 @@ public class Main extends Application {
 
     //todo add locales
     //todo add stupid music and music-button
+    //todo add i18n
 
     @Override
     public void start(Stage primaryStage) throws Exception{

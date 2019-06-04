@@ -3,12 +3,14 @@ package org.pva.controllers;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.pva.encryption.AES;
 
@@ -25,7 +27,6 @@ public class LoginController {
     @FXML
     PasswordField passwordField;
 
-    @FXML
     public void selectFileOnAction(ActionEvent actionEvent) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("TXT", "*.txt"));
@@ -34,7 +35,6 @@ public class LoginController {
             filePathField.setText(file.getAbsolutePath());
     }
 
-    @FXML
     public void decryptBtnOnAction(ActionEvent actionEvent) throws IOException {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Data entry error");
@@ -66,19 +66,18 @@ public class LoginController {
 
     }
 
-    @FXML
     public void createNewBtnOnAction(ActionEvent actionEvent) throws IOException {
-        Stage passwordsList = new Stage();
+        Stage stage = new Stage();
         Parent root = FXMLLoader.load(getClass().getResource("/passwordsList.fxml"));
-        passwordsList.setTitle("Passwords");
-        passwordsList.setScene(new Scene(root, 460, 280));
-        passwordsList.setMinWidth(460);
-        passwordsList.setMinHeight(280);
-        passwordsList.show();
+        stage.setTitle("Passwords");
+        stage.setScene(new Scene(root, 460, 280));
+        stage.setMinWidth(460);
+        stage.setMinHeight(280);
+        stage.show();
 
-
-
+        ((Node) actionEvent.getSource()).getScene().getWindow().hide();
     }
+
 
 
 

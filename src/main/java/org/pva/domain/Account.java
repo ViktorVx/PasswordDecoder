@@ -2,7 +2,11 @@ package org.pva.domain;
 
 import javafx.beans.property.SimpleStringProperty;
 
+import java.util.UUID;
+
 public class Account {
+
+    private UUID id;
 
     private SimpleStringProperty resource;
 
@@ -17,6 +21,14 @@ public class Account {
         this.resource.set(resource);
         this.login.set(login);
         this.password.set(password);
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public String getResource() {
