@@ -17,7 +17,7 @@ public class PasswordListController {
         Parent root = FXMLLoader.load(getClass().getResource("/passwordEdit.fxml"));
         passwordsList.setTitle("New account");
         passwordsList.setResizable(false);
-        passwordsList.setScene(new Scene(root, 230, 150));
+        passwordsList.setScene(new Scene(root, 350, 120));
         passwordsList.show();
     }
 }

@@ -72,6 +72,8 @@ public class LoginController {
         Parent root = FXMLLoader.load(getClass().getResource("/passwordsList.fxml"));
         passwordsList.setTitle("Passwords");
         passwordsList.setScene(new Scene(root, 460, 280));
+        passwordsList.setMinWidth(460);
+        passwordsList.setMinHeight(280);
         passwordsList.show();
 
 
