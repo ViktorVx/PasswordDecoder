@@ -1,5 +1,6 @@
 package org.pva.controllers;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -25,7 +26,7 @@ public class LoginController {
     PasswordField passwordField;
 
     @FXML
-    public void selectFileOnClick() {
+    public void selectFileOnAction(ActionEvent actionEvent) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("TXT", "*.txt"));
         File file = fileChooser.showOpenDialog(new Stage());
@@ -34,7 +35,7 @@ public class LoginController {
     }
 
     @FXML
-    public void decryptBtnOnClick() throws IOException {
+    public void decryptBtnOnAction(ActionEvent actionEvent) throws IOException {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Data entry error");
         if (filePathField == null || filePathField.getText() == null || filePathField.getText().equals("")) {
@@ -62,15 +63,17 @@ public class LoginController {
 
         System.out.println(fileContent);
 
+
     }
 
     @FXML
-    public void createNewBtnOnClick() throws IOException {
+    public void createNewBtnOnAction(ActionEvent actionEvent) throws IOException {
         Stage passwordsList = new Stage();
         Parent root = FXMLLoader.load(getClass().getResource("/passwordsList.fxml"));
         passwordsList.setTitle("Passwords");
         passwordsList.setScene(new Scene(root, 460, 280));
         passwordsList.show();
+
 
 
     }
