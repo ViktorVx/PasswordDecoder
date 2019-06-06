@@ -2,6 +2,8 @@ package org.pva.controllers;
 
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -10,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.pva.domain.Account;
@@ -40,10 +43,7 @@ public class PasswordListController {
     private Parent parentEdit;
     private PasswordEditController editController;
 
-
-    public AccountsMapStorage getAccountsMapStorage() {
-        return accountsMapStorage;
-    }
+    //todo add Unit-tests
 
     @FXML
     private void initialize() {
@@ -58,31 +58,47 @@ public class PasswordListController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        initListeners();
     }
+
+    private void initListeners() {
+        tableAccounts.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                openEditWindow(event, (Account) tableAccounts.getSelectionModel().getSelectedItem());
+            }
+        });
+    }
+
+    //******************************************************************************************************************
 
     public void setAccountsMapStorage(AccountsMapStorage accountsMapStorage) {
         this.accountsMapStorage = accountsMapStorage;
         if (accountsMapStorage == null) return;
-        accountsMapStorage.getAccounts().addListener((ListChangeListener<Account>) c -> System.out.println("Observable list has been changed!!!"));
 
+        accountsMapStorage.getAccounts().addListener((ListChangeListener<Account>) c -> System.out.println("Observable list has been changed!!!"));
         tableAccounts.setItems(accountsMapStorage.getAccounts());
     }
 
-    public void btnAddNewOnAction(ActionEvent actionEvent) throws IOException {
+    //******************************************************************************************************************
+
+    public void btnAddNewOnAction(ActionEvent actionEvent) {
         openEditWindow(actionEvent, null);
     }
 
-    public void btnEditOnAction(ActionEvent actionEvent) throws IOException {
+    public void btnEditOnAction(ActionEvent actionEvent) {
         Account account = (Account) tableAccounts.getSelectionModel().getSelectedItem();
         openEditWindow(actionEvent, account);
     }
 
-    public void btnDeleteOnAction(ActionEvent actionEvent) {
+    public void btnDeleteOnAction() {
         Account account = (Account) tableAccounts.getSelectionModel().getSelectedItem();
         accountsMapStorage.delete(account);
     }
 
-    private void openEditWindow(ActionEvent actionEvent, Account account) throws IOException {
+    //******************************************************************************************************************
+
+    private void openEditWindow(Event event, Account account) {
         if (editStage == null) {
             editStage = new Stage();
             editStage.setTitle(account == null ? "New account" : "Account");
@@ -90,7 +106,7 @@ public class PasswordListController {
             editStage.setScene(new Scene(parentEdit, 350, 120));
             //***
             editStage.initModality(Modality.WINDOW_MODAL);
-            editStage.initOwner(((Node) actionEvent.getSource()).getScene().getWindow());
+            editStage.initOwner(((Node) event.getSource()).getScene().getWindow());
         }
         editController.setAccountsMapStorage(accountsMapStorage);
         editController.setAccount(account);
