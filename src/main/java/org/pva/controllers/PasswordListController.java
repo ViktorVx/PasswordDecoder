@@ -19,7 +19,6 @@ import java.io.IOException;
 
 public class PasswordListController {
 
-    private AccountsMapStorage accountsMapStorage;
 
     @FXML
     private TableView tableAccounts;
@@ -33,21 +32,29 @@ public class PasswordListController {
     @FXML
     private TableColumn columnPassword;
 
+    private AccountsMapStorage accountsMapStorage;
+
+    private FXMLLoader loader = new FXMLLoader();
+
+    private Stage editStage;
+    private Parent parentEdit;
+    private PasswordEditController editController;
+
+
+
     @FXML
     private void initialize() {
         columnResource.setCellValueFactory(new PropertyValueFactory<Account, String>("resource"));
         columnLogin.setCellValueFactory(new PropertyValueFactory<Account, String>("login"));
         columnPassword.setCellValueFactory(new PropertyValueFactory<Account, String>("password"));
 
-//        if (accountsMapStorage == null) return;
-//        accountsMapStorage.getAccounts().addListener(new ListChangeListener<Account>() {
-//            @Override
-//            public void onChanged(Change<? extends Account> c) {
-//                System.out.println("Observable list has been changed!!!");
-//            }
-//        });
-//
-//        tableAccounts.setItems(accountsMapStorage.getAccounts());
+        try {
+            loader.setLocation(getClass().getResource("/passwordEdit.fxml"));
+            parentEdit = loader.load();
+            editController = loader.getController();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void setAccountsMapStorage(AccountsMapStorage accountsMapStorage) {
@@ -59,15 +66,26 @@ public class PasswordListController {
     }
 
     public void addNewBtnOnAction(ActionEvent actionEvent) throws IOException {
-        Stage stage = new Stage();
-        Parent root = FXMLLoader.load(getClass().getResource("/passwordEdit.fxml"));
-        stage.setTitle("New account");
-        stage.setResizable(false);
-        stage.setScene(new Scene(root, 350, 120));
-        //***
-        stage.initModality(Modality.WINDOW_MODAL);
-        stage.initOwner(((Node) actionEvent.getSource()).getScene().getWindow());
-        //***
-        stage.show();
+        openEditWindow(actionEvent, null);
     }
+
+    public void btnEditOnAction(ActionEvent actionEvent) throws IOException {
+        openEditWindow(actionEvent, null);
+    }
+
+    private void openEditWindow(ActionEvent actionEvent, Account account) throws IOException {
+        if (editStage == null) {
+            editStage = new Stage();
+            editStage.setTitle(account == null ? "New account" : "Account");
+            editStage.setResizable(false);
+            editStage.setScene(new Scene(parentEdit, 350, 120));
+            //***
+            editStage.initModality(Modality.WINDOW_MODAL);
+            editStage.initOwner(((Node) actionEvent.getSource()).getScene().getWindow());
+        }
+        editController.setAccount(account);
+        //***
+        editStage.show();
+    }
+
 }
