@@ -8,11 +8,11 @@ public class Account {
 
     private UUID id;
 
-    private SimpleStringProperty resource;
+    private SimpleStringProperty resource = new SimpleStringProperty();
 
-    private SimpleStringProperty login;
+    private SimpleStringProperty login = new SimpleStringProperty();
 
-    private SimpleStringProperty password;
+    private SimpleStringProperty password = new SimpleStringProperty();
 
     public Account() {
     }
@@ -35,35 +35,39 @@ public class Account {
         return resource.get();
     }
 
-    public SimpleStringProperty resourceProperty() {
-        return resource;
-    }
-
     public void setResource(String resource) {
         this.resource.set(resource);
     }
 
-    public String getLogin() {
-        return login.get();
+    public SimpleStringProperty resourceProperty() {
+        return resource;
     }
 
-    public SimpleStringProperty loginProperty() {
-        return login;
+
+
+    public String getLogin() {
+        return login.get();
     }
 
     public void setLogin(String login) {
         this.login.set(login);
     }
 
+    public SimpleStringProperty loginProperty() {
+        return login;
+    }
+
+
+
     public String getPassword() {
         return password.get();
     }
 
-    public SimpleStringProperty passwordProperty() {
-        return password;
-    }
-
     public void setPassword(String password) {
         this.password.set(password);
+    }
+
+    public SimpleStringProperty passwordProperty() {
+        return password;
     }
 }

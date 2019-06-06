@@ -10,8 +10,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.pva.domain.AccountsMapStorage;
 import org.pva.encryption.AES;
 
 import java.io.File;
@@ -26,6 +26,39 @@ public class LoginController {
 
     @FXML
     PasswordField passwordField;
+
+    private FXMLLoader fxmlLoader = new FXMLLoader();
+
+    private Parent passwordListFxml;
+    private PasswordListController passwordListController;
+    private Stage passwordListStage;
+
+    @FXML
+    private void initialize() {
+        try {
+            fxmlLoader.setLocation(getClass().getResource("/passwordsList.fxml"));
+            passwordListFxml = fxmlLoader.load();
+            passwordListController = fxmlLoader.getController();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openPasswordList(ActionEvent actionEvent, AccountsMapStorage accountsMapStorage) throws IOException {
+        passwordListController.setAccountsMapStorage(accountsMapStorage);
+        if (passwordListStage == null) {
+            passwordListStage = new Stage();
+            passwordListStage.setTitle("Passwords");
+            passwordListStage.setScene(new Scene(passwordListFxml, 460, 280));
+            passwordListStage.setMinWidth(460);
+            passwordListStage.setMinHeight(280);
+        }
+        passwordListStage.show();
+
+        Node source = (Node) actionEvent.getSource();
+        Stage stg = (Stage) source.getScene().getWindow();
+        stg.close();
+    }
 
     public void selectFileOnAction(ActionEvent actionEvent) {
         FileChooser fileChooser = new FileChooser();
@@ -59,26 +92,14 @@ public class LoginController {
 
 //        String fileContent = AES.encrypt(new String(fileBytes, StandardCharsets.UTF_8), pass);
         String fileContent = AES.decrypt(new String(fileBytes, StandardCharsets.UTF_8), pass);
-
-
         System.out.println(fileContent);
 
-
+        //****************************************************
+        AccountsMapStorage accountsMapStorage = new AccountsMapStorage(fileContent);
+        openPasswordList(actionEvent, accountsMapStorage);
     }
 
     public void createNewBtnOnAction(ActionEvent actionEvent) throws IOException {
-        Stage stage = new Stage();
-        Parent root = FXMLLoader.load(getClass().getResource("/passwordsList.fxml"));
-        stage.setTitle("Passwords");
-        stage.setScene(new Scene(root, 460, 280));
-        stage.setMinWidth(460);
-        stage.setMinHeight(280);
-        stage.show();
-
-        ((Node) actionEvent.getSource()).getScene().getWindow().hide();
+        openPasswordList(actionEvent, new AccountsMapStorage());
     }
-
-
-
-
 }
