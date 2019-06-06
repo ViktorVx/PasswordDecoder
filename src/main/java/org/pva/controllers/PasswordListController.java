@@ -41,6 +41,9 @@ public class PasswordListController {
     private PasswordEditController editController;
 
 
+    public AccountsMapStorage getAccountsMapStorage() {
+        return accountsMapStorage;
+    }
 
     @FXML
     private void initialize() {
@@ -65,12 +68,18 @@ public class PasswordListController {
         tableAccounts.setItems(accountsMapStorage.getAccounts());
     }
 
-    public void addNewBtnOnAction(ActionEvent actionEvent) throws IOException {
+    public void btnAddNewOnAction(ActionEvent actionEvent) throws IOException {
         openEditWindow(actionEvent, null);
     }
 
     public void btnEditOnAction(ActionEvent actionEvent) throws IOException {
-        openEditWindow(actionEvent, null);
+        Account account = (Account) tableAccounts.getSelectionModel().getSelectedItem();
+        openEditWindow(actionEvent, account);
+    }
+
+    public void btnDeleteOnAction(ActionEvent actionEvent) {
+        Account account = (Account) tableAccounts.getSelectionModel().getSelectedItem();
+        accountsMapStorage.delete(account);
     }
 
     private void openEditWindow(ActionEvent actionEvent, Account account) throws IOException {
@@ -83,9 +92,9 @@ public class PasswordListController {
             editStage.initModality(Modality.WINDOW_MODAL);
             editStage.initOwner(((Node) actionEvent.getSource()).getScene().getWindow());
         }
+        editController.setAccountsMapStorage(accountsMapStorage);
         editController.setAccount(account);
         //***
         editStage.show();
     }
-
 }
