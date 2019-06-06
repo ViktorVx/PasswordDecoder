@@ -18,6 +18,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class LoginController {
 
@@ -36,7 +38,11 @@ public class LoginController {
     @FXML
     private void initialize() {
         try {
+            Locale locale = new Locale("ru", "RU");
+            ResourceBundle resourceBundle = ResourceBundle.getBundle("locale", locale);
             fxmlLoader.setLocation(getClass().getResource("/passwordsList.fxml"));
+            fxmlLoader.setResources(resourceBundle);
+
             passwordListFxml = fxmlLoader.load();
             passwordListController = fxmlLoader.getController();
         } catch (IOException e) {
