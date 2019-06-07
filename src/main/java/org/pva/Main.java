@@ -22,13 +22,11 @@ public class Main extends Application {
 
         Locale locale = new Locale("ru", "RU");
         ResourceBundle resourceBundle = ResourceBundle.getBundle("locale", locale);
-        fxmlLoader.setLocation(getClass().getResource("/login.fxml"));
         fxmlLoader.setResources(resourceBundle);
+        fxmlLoader.setLocation(getClass().getResource("/login.fxml"));
 
         Parent root = fxmlLoader.load();
 
-//        Parent root = FXMLLoader.load(getClass().getResource("/login.fxml"));
-//        primaryStage.setTitle("Password decrypter");
         primaryStage.setTitle(fxmlLoader.getResources().getString("app.name"));
 
         Scene scene = new Scene(root, 430, 55);

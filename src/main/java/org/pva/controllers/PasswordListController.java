@@ -1,16 +1,20 @@
 package org.pva.controllers;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
@@ -19,8 +23,10 @@ import org.pva.domain.Account;
 import org.pva.domain.AccountsMapStorage;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-public class PasswordListController {
+public class PasswordListController implements Initializable {
 
 
     @FXML
@@ -35,7 +41,11 @@ public class PasswordListController {
     @FXML
     private TableColumn columnPassword;
 
+    @FXML
+    private TextField txtSearch;
+
     private AccountsMapStorage accountsMapStorage;
+    private ObservableList<Account> accountsBackUp;
 
     private FXMLLoader loader = new FXMLLoader();
 
@@ -45,14 +55,15 @@ public class PasswordListController {
 
     //todo add Unit-tests
 
-    @FXML
-    private void initialize() {
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
         columnResource.setCellValueFactory(new PropertyValueFactory<Account, String>("resource"));
         columnLogin.setCellValueFactory(new PropertyValueFactory<Account, String>("login"));
         columnPassword.setCellValueFactory(new PropertyValueFactory<Account, String>("password"));
 
         try {
             loader.setLocation(getClass().getResource("/passwordEdit.fxml"));
+            loader.setResources(resources);
             parentEdit = loader.load();
             editController = loader.getController();
         } catch (IOException e) {
@@ -78,6 +89,10 @@ public class PasswordListController {
 
         accountsMapStorage.getAccounts().addListener((ListChangeListener<Account>) c -> System.out.println("Observable list has been changed!!!"));
         tableAccounts.setItems(accountsMapStorage.getAccounts());
+
+        //***!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        accountsBackUp = FXCollections.observableArrayList();
+        accountsBackUp.addAll(accountsMapStorage.getAccounts());
     }
 
     //******************************************************************************************************************
@@ -94,6 +109,15 @@ public class PasswordListController {
     public void btnDeleteOnAction() {
         Account account = (Account) tableAccounts.getSelectionModel().getSelectedItem();
         accountsMapStorage.delete(account);
+    }
+
+    public void btnSearchOnAction(ActionEvent actionEvent) {
+        accountsMapStorage.getAccounts().clear();
+        for (Account account : accountsBackUp) {
+            if (account.getResource().toLowerCase().contains(txtSearch.getText().toLowerCase())) {
+                accountsMapStorage.getAccounts().add(account);
+            }
+        }
     }
 
     //******************************************************************************************************************
@@ -113,4 +137,5 @@ public class PasswordListController {
         //***
         editStage.show();
     }
+
 }

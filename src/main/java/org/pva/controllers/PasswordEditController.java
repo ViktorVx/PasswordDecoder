@@ -2,6 +2,7 @@ package org.pva.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -9,8 +10,11 @@ import javafx.stage.Stage;
 import org.pva.domain.Account;
 import org.pva.domain.AccountsMapStorage;
 
+import java.net.URL;
+import java.util.ResourceBundle;
 
-public class PasswordEditController {
+
+public class PasswordEditController implements Initializable {
     //todo add images to copy to clipboard button and show password-button
 
     @FXML
@@ -27,7 +31,15 @@ public class PasswordEditController {
 
     private Account account;
     private AccountsMapStorage accountsMapStorage;
+    private ResourceBundle resourceBundle;
 
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        this.resourceBundle = resources;
+    }
+
+    //******************************************************************************************************************
 
     public void setAccount(Account account) {
         if (account != null) {
@@ -50,14 +62,10 @@ public class PasswordEditController {
         this.accountsMapStorage = accountsMapStorage;
     }
 
+    //******************************************************************************************************************
+
     public void btnCancelOnAction(ActionEvent actionEvent) {
         actionClose(actionEvent);
-    }
-
-    private void actionClose(ActionEvent actionEvent) {
-        Node source = (Node) actionEvent.getSource();
-        Stage stage = (Stage) source.getScene().getWindow();
-        stage.close();
     }
 
     public void btnSaveOnAction(ActionEvent actionEvent) {
@@ -75,5 +83,14 @@ public class PasswordEditController {
         }
         actionClose(actionEvent);
     }
+
+    //******************************************************************************************************************
+
+    private void actionClose(ActionEvent actionEvent) {
+        Node source = (Node) actionEvent.getSource();
+        Stage stage = (Stage) source.getScene().getWindow();
+        stage.close();
+    }
+
 
 }
