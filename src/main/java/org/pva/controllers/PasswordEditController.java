@@ -14,7 +14,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 
-public class PasswordEditController implements Initializable {
+public class PasswordEditController implements Initializable{
     //todo add images to copy to clipboard button and show password-button
 
     @FXML
@@ -91,6 +91,5 @@ public class PasswordEditController implements Initializable {
         Stage stage = (Stage) source.getScene().getWindow();
         stage.close();
     }
-
 
 }

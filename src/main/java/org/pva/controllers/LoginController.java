@@ -8,22 +8,28 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.pva.domain.AccountsMapStorage;
 import org.pva.encryption.AES;
+import org.pva.utils.locale.Lang;
+import org.pva.utils.locale.LocaleManager;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.Locale;
+import java.util.Observable;
 import java.util.ResourceBundle;
 
-public class LoginController implements Initializable {
+public class LoginController extends Observable implements Initializable {
+
+    @FXML
+    public ComboBox comboLocales;
 
     @FXML
     TextField filePathField;
@@ -33,26 +39,23 @@ public class LoginController implements Initializable {
 
     private FXMLLoader fxmlLoader = new FXMLLoader();
 
+    private Parent root;
+
     private Parent passwordListFxml;
     private PasswordListController passwordListController;
     private Stage passwordListStage;
     private ResourceBundle resourceBundle;
 
-    private void openPasswordList(ActionEvent actionEvent, AccountsMapStorage accountsMapStorage) throws IOException {
-        passwordListController.setAccountsMapStorage(accountsMapStorage);
-        if (passwordListStage == null) {
-            passwordListStage = new Stage();
-            passwordListStage.setTitle("Passwords");
-            passwordListStage.setScene(new Scene(passwordListFxml, 460, 280));
-            passwordListStage.setMinWidth(460);
-            passwordListStage.setMinHeight(280);
-        }
-        passwordListStage.show();
+    public static final String RU_CODE = "ru";
+    public static final String EN_CODE = "en";
 
-        Node source = (Node) actionEvent.getSource();
-        Stage stg = (Stage) source.getScene().getWindow();
-        stg.close();
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
+        this.resourceBundle = resources;
     }
+
+    //******************************************************************************************************************
 
     public void selectFileOnAction(ActionEvent actionEvent) {
         FileChooser fileChooser = new FileChooser();
@@ -98,20 +101,89 @@ public class LoginController implements Initializable {
         openPasswordList(actionEvent, new AccountsMapStorage());
     }
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        try {
-            Locale locale = new Locale("ru", "RU");
-            ResourceBundle resourceBundle = ResourceBundle.getBundle("locale", locale);
-            fxmlLoader.setLocation(getClass().getResource("/passwordsList.fxml"));
-            fxmlLoader.setResources(resourceBundle);
+    //******************************************************************************************************************
 
-            passwordListFxml = fxmlLoader.load();
-            passwordListController = fxmlLoader.getController();
-        } catch (IOException e) {
-            e.printStackTrace();
+    public void fillLangCombo() {
+        Lang langRU = new Lang(RU_CODE, resourceBundle.getString("ru"), LocaleManager.RU_LOCALE,0);
+        Lang langEN = new Lang(EN_CODE, resourceBundle.getString("en"), LocaleManager.EN_LOCALE, 1);
+
+        comboLocales.getItems().add(langRU);
+        comboLocales.getItems().add(langEN);
+
+        if (LocaleManager.getCurrentLang() == null) {
+            comboLocales.getSelectionModel().select(0);
+        } else {
+            comboLocales.getSelectionModel().select(LocaleManager.getCurrentLang().getIndex());
         }
 
-        this.resourceBundle = resources;
+        comboLocales.setOnAction(event -> {
+            Lang selectLang = (Lang) comboLocales.getSelectionModel().getSelectedItem();
+            LocaleManager.setCurrentLang(selectLang);
+            setChanged();
+            notifyObservers(selectLang);
+        });
+
     }
+
+    private void openPasswordList(ActionEvent actionEvent, AccountsMapStorage accountsMapStorage) throws IOException {
+
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("locale", LocaleManager.getCurrentLang().getLocale());
+        fxmlLoader.setLocation(getClass().getResource("/passwordsList.fxml"));
+        fxmlLoader.setResources(resourceBundle);
+
+        passwordListFxml = fxmlLoader.load();
+        passwordListController = fxmlLoader.getController();
+
+        passwordListController.setAccountsMapStorage(accountsMapStorage);
+        if (passwordListStage == null) {
+            passwordListStage = new Stage();
+            passwordListStage.setTitle("Passwords");
+            passwordListStage.setScene(new Scene(passwordListFxml, 460, 280));
+            passwordListStage.setMinWidth(460);
+            passwordListStage.setMinHeight(280);
+        }
+        passwordListStage.show();
+
+        Node source = (Node) actionEvent.getSource();
+        Stage stg = (Stage) source.getScene().getWindow();
+        stg.close();
+    }
+
+//    @Override
+//    public void update(Observable o, Object arg) {
+////        AnchorPane newNode = loadFXML(LocaleManager.getCurrentLang().getLocale());
+////        .getChildrenUnmodifiable().setAll(newNode.getChildren());
+////        System.out.println("change locale on login form");
+////        resourceBundle = ResourceBundle.getBundle("locale", LocaleManager.getCurrentLang().getLocale());
+////        fxmlLoader.setResources(resourceBundle);
+////        try {
+////            FXMLLoader loader = new FXMLLoader();
+////            loader.setResources(ResourceBundle.getBundle("locale", LocaleManager.getCurrentLang().getLocale()));
+////            AnchorPane anchorPane = loader.load(this.getClass().getResource("/login.fxml").openStream());
+//////            .getChildren().clear();
+////            anchorPane.getChildren().setAll(anchorPane.getChildren());
+////        } catch (IOException e) {
+////            e.printStackTrace();
+////        }
+//
+//    }
+
+//    private AnchorPane loadFXML(Locale locale) {
+//        FXMLLoader loader = new FXMLLoader();
+//
+//        loader.setLocation(getClass().getResource("/login.fxml"));
+//        loader.setResources(ResourceBundle.getBundle("locale", LocaleManager.getCurrentLang().getLocale()));
+//
+//        AnchorPane node = null;
+//
+//        try {
+//            node = loader.load();
+//            LoginController loginController = loader.getController();
+//            loginController.addObserver(this);
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return node;
+//    }
 }

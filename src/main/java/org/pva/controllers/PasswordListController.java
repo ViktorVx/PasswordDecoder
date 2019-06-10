@@ -1,11 +1,13 @@
 package org.pva.controllers;
 
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -16,14 +18,17 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.pva.domain.Account;
 import org.pva.domain.AccountsMapStorage;
+import org.pva.utils.locale.LocaleManager;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class PasswordListController implements Initializable {
@@ -47,8 +52,9 @@ public class PasswordListController implements Initializable {
     private AccountsMapStorage accountsMapStorage;
     private ObservableList<Account> accountsBackUp;
 
-    private FXMLLoader loader = new FXMLLoader();
+    private String filePath;
 
+    private FXMLLoader loader = new FXMLLoader();
     private Stage editStage;
     private Parent parentEdit;
     private PasswordEditController editController;
@@ -63,7 +69,10 @@ public class PasswordListController implements Initializable {
 
         try {
             loader.setLocation(getClass().getResource("/passwordEdit.fxml"));
-            loader.setResources(resources);
+//            loader.setResources(resources);
+            ResourceBundle resourceBundle = ResourceBundle.getBundle("locale", LocaleManager.getCurrentLang().getLocale());
+//            loader.setResources(resources);
+            loader.setResources(resourceBundle);
             parentEdit = loader.load();
             editController = loader.getController();
         } catch (IOException e) {
@@ -95,9 +104,32 @@ public class PasswordListController implements Initializable {
         accountsBackUp.addAll(accountsMapStorage.getAccounts());
     }
 
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
     //******************************************************************************************************************
 
     public void btnAddNewOnAction(ActionEvent actionEvent) {
+        //*******
+        System.out.println("Place to test Jackson");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<Account> accounts = accountsMapStorage.getAccounts();
+        Collections.sort(accounts, Comparator.comparing(Account::getId));
+
+        try {
+            String finalJson = objectMapper.writeValueAsString(accounts);
+            System.out.println(finalJson);
+        } catch (JsonGenerationException e) {
+            e.printStackTrace();
+        } catch (JsonMappingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //*******
         openEditWindow(actionEvent, null);
     }
 
@@ -137,5 +169,4 @@ public class PasswordListController implements Initializable {
         //***
         editStage.show();
     }
-
 }

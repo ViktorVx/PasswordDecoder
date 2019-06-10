@@ -1,9 +1,12 @@
 package org.pva.domain;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import javafx.beans.property.SimpleStringProperty;
 
+import java.util.Objects;
 import java.util.UUID;
 
+@JsonPropertyOrder({"resource", "login", "password", "id"})
 public class Account {
 
     private UUID id;
@@ -69,5 +72,21 @@ public class Account {
 
     public SimpleStringProperty passwordProperty() {
         return password;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Account account = (Account) o;
+        return Objects.equals(id, account.id) &&
+                Objects.equals(resource, account.resource) &&
+                Objects.equals(login, account.login) &&
+                Objects.equals(password, account.password);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, resource, login, password);
     }
 }
