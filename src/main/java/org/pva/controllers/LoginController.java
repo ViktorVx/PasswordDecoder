@@ -135,6 +135,8 @@ public class LoginController extends Observable implements Initializable {
         passwordListController = fxmlLoader.getController();
 
         passwordListController.setAccountsMapStorage(accountsMapStorage);
+        passwordListController.setFilePath(filePathField.getText());
+
         if (passwordListStage == null) {
             passwordListStage = new Stage();
             passwordListStage.setTitle("Passwords");

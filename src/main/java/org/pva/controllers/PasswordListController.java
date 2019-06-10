@@ -24,6 +24,7 @@ import org.pva.domain.Account;
 import org.pva.domain.AccountsMapStorage;
 import org.pva.utils.locale.LocaleManager;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;
@@ -110,17 +111,27 @@ public class PasswordListController implements Initializable {
 
     //******************************************************************************************************************
 
-    public void btnAddNewOnAction(ActionEvent actionEvent) {
-        //*******
-        System.out.println("Place to test Jackson");
+    private void openEditWindow(Event event, Account account) {
+        if (editStage == null) {
+            editStage = new Stage();
+            editStage.setTitle(account == null ? "New account" : "Account");
+            editStage.setResizable(false);
+            editStage.setScene(new Scene(parentEdit, 350, 120));
+            //***
+            editStage.initModality(Modality.WINDOW_MODAL);
+            editStage.initOwner(((Node) event.getSource()).getScene().getWindow());
+        }
+        editController.setAccountsMapStorage(accountsMapStorage);
+        editController.setAccount(account);
+        //***
+        editStage.show();
+    }
 
+    private void savePasswordsFile(String filePath) {
         ObjectMapper objectMapper = new ObjectMapper();
         List<Account> accounts = accountsMapStorage.getAccounts();
-        Collections.sort(accounts, Comparator.comparing(Account::getId));
-
         try {
-            String finalJson = objectMapper.writeValueAsString(accounts);
-            System.out.println(finalJson);
+            objectMapper.writeValue(new FileOutputStream(filePath), accounts);
         } catch (JsonGenerationException e) {
             e.printStackTrace();
         } catch (JsonMappingException e) {
@@ -128,8 +139,11 @@ public class PasswordListController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
-        //*******
+    //******************************************************************************************************************
+
+    public void btnAddNewOnAction(ActionEvent actionEvent) {
         openEditWindow(actionEvent, null);
     }
 
@@ -152,21 +166,7 @@ public class PasswordListController implements Initializable {
         }
     }
 
-    //******************************************************************************************************************
-
-    private void openEditWindow(Event event, Account account) {
-        if (editStage == null) {
-            editStage = new Stage();
-            editStage.setTitle(account == null ? "New account" : "Account");
-            editStage.setResizable(false);
-            editStage.setScene(new Scene(parentEdit, 350, 120));
-            //***
-            editStage.initModality(Modality.WINDOW_MODAL);
-            editStage.initOwner(((Node) event.getSource()).getScene().getWindow());
-        }
-        editController.setAccountsMapStorage(accountsMapStorage);
-        editController.setAccount(account);
-        //***
-        editStage.show();
+    public void mnSaveOnAction(ActionEvent actionEvent) {
+        savePasswordsFile(filePath);
     }
 }
