@@ -14,15 +14,14 @@ import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.pva.domain.AccountsMapStorage;
-import org.pva.encryption.AES;
 import org.pva.utils.locale.Lang;
 import org.pva.utils.locale.LocaleManager;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Observable;
 import java.util.ResourceBundle;
 
@@ -46,8 +45,8 @@ public class LoginController extends Observable implements Initializable {
     private Stage passwordListStage;
     private ResourceBundle resourceBundle;
 
-    public static final String RU_CODE = "ru";
-    public static final String EN_CODE = "en";
+    private static final String RU_CODE = "ru";
+    private static final String EN_CODE = "en";
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -84,14 +83,16 @@ public class LoginController extends Observable implements Initializable {
         }
 
         File file = new File(filePathField.getText());
-        byte[] fileBytes = Files.readAllBytes(file.toPath());
-
-        char[] pass = passwordField.getText().toCharArray();
-
-//        String fileContent = AES.encrypt(new String(fileBytes, StandardCharsets.UTF_8), pass);
-        String fileContent = AES.decrypt(new String(fileBytes, StandardCharsets.UTF_8), pass);
-        System.out.println(fileContent);
-
+        // *** NoEncryption ***
+        String fileContent = new String(Files.readAllBytes(Paths.get(filePathField.getText())));
+        // *** Enctyption ***
+//        byte[] fileBytes = Files.readAllBytes(file.toPath());
+//
+//        char[] pass = passwordField.getText().toCharArray();
+//
+////        String fileContent = AES.encrypt(new String(fileBytes, StandardCharsets.UTF_8), pass);
+//        String fileContent = AES.decrypt(new String(fileBytes, StandardCharsets.UTF_8), pass);
+//        System.out.println(fileContent);
         //****************************************************
         AccountsMapStorage accountsMapStorage = new AccountsMapStorage(fileContent);
         openPasswordList(actionEvent, accountsMapStorage);

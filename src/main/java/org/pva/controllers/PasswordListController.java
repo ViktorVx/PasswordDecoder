@@ -27,8 +27,6 @@ import org.pva.utils.locale.LocaleManager;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -132,10 +130,6 @@ public class PasswordListController implements Initializable {
         List<Account> accounts = accountsMapStorage.getAccounts();
         try {
             objectMapper.writeValue(new FileOutputStream(filePath), accounts);
-        } catch (JsonGenerationException e) {
-            e.printStackTrace();
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

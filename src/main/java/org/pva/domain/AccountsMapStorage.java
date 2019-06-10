@@ -1,9 +1,14 @@
 package org.pva.domain;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.pva.domain.interfaces.IAccauntManipulations;
 
+import java.io.IOException;
 import java.util.*;
 
 public class AccountsMapStorage implements IAccauntManipulations {
@@ -14,13 +19,13 @@ public class AccountsMapStorage implements IAccauntManipulations {
     }
 
     public AccountsMapStorage(String jsonString) {
-        //todo delete fulfilling - make real json-deserialization
-        for (int i = 1; i < 10; i++) {
-            Account account = new Account();
-            account.setResource("google.com");
-            account.setLogin(String.format("helloworld%d@gmail.com", i));
-            account.setPassword(String.valueOf(i*370));
-            add(account);
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            Class<?> clz = Class.forName("org.pva.domain.Account");
+            JavaType type = objectMapper.getTypeFactory().constructCollectionType(List.class, clz);
+            accounts = FXCollections.observableArrayList((Collection<? extends Account>) objectMapper.readValue(jsonString, type));
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
